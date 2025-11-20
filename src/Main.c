@@ -36,8 +36,9 @@ void Setup(AlxWindow* w){
 
 	voxelworld = VoxelWorld_New(
 		Camera_Make(
-			Vec3D_New(0.0f,0.0f,0.0f),
+			Vec3D_New(10.0f,100.0f,10.0f),
 			Vec3D_New(0.5f,1.8f,0.5f),
+			Vec3D_New(0.0f,-10.0f,0.0f),
 			Vec3D_New(0.0f,0.0f,0.0f),
 			90.0f
 		),
@@ -67,19 +68,19 @@ void Update(AlxWindow* w){
 	if(Stroke(ALX_KEY_Z).PRESSED)
 		voxelworld.mode = voxelworld.mode < 3 ? voxelworld.mode + 1 : 0;
 
-	if(Stroke(ALX_KEY_R).DOWN) Camera_AccUp(VoxelWorld_GetCam(&voxelworld),5.0f);
-	if(Stroke(ALX_KEY_F).DOWN) Camera_AccDown(VoxelWorld_GetCam(&voxelworld),5.0f);
+	if(Stroke(ALX_KEY_R).DOWN) 		Camera_AccUp(VoxelWorld_GetCam(&voxelworld),5.0f);
+	else if(Stroke(ALX_KEY_F).DOWN) Camera_AccUp(VoxelWorld_GetCam(&voxelworld),-5.0f);
+	else							Camera_AccUp(VoxelWorld_GetCam(&voxelworld),0.0f);
 	
 	if(Stroke(ALX_KEY_W).DOWN) 	Camera_AccForward(VoxelWorld_GetCam(&voxelworld),20.0f * w->ElapsedTime);
 	if(Stroke(ALX_KEY_S).DOWN) 	Camera_AccForward(VoxelWorld_GetCam(&voxelworld),-20.0f * w->ElapsedTime);
 	if(Stroke(ALX_KEY_A).DOWN) 	Camera_AccLeft(VoxelWorld_GetCam(&voxelworld),20.0f * w->ElapsedTime);
 	if(Stroke(ALX_KEY_D).DOWN)  Camera_AccLeft(VoxelWorld_GetCam(&voxelworld),-20.0f * w->ElapsedTime);
 
-
 	if(Stroke(ALX_MOUSE_L).PRESSED) VoxelWorld_Camera_Place(&voxelworld,BLOCK_VOID,4.0f);
 	if(Stroke(ALX_MOUSE_R).PRESSED) VoxelWorld_Camera_PlaceN(&voxelworld,BLOCK_TORCH,4.0f);
 
-	VoxelWorld_Update(&voxelworld);
+	VoxelWorld_Update(&voxelworld,w->ElapsedTime);
 
 	Clear(LIGHT_BLUE);
 	VoxelWorld_Render(WINDOW_STD_ARGS,&voxelworld);
